@@ -43,19 +43,5 @@ venv.bak/
 .idea/
 *.swp
 
-# Generated data and figures
-*.npz
-*.xlsx
-*.svg
-*.png
-*.jpg
-*.jpeg
-*.pdf
-
-# Results directory (keep .gitkeep only)
-results/**
-!results/
-!results/.gitkeep
-
-# External source directory (not part of this repo)
-SCI_paper/
+# Temporary files
+*.tmp
