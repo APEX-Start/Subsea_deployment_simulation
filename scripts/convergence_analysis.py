@@ -7,21 +7,43 @@ r"""
 2. 静态悬链线（解析）与数值稳态形状对比
 3. 自动导出论文图表与 CSV 数据
 
-运行示例：
-    python sensitivity_convergence/convergence_analysis.py --mode all
-    python sensitivity_convergence/convergence_analysis.py --mode mesh --quick
-    python sensitivity_convergence/convergence_analysis.py --mode mesh --stress-metric p95
-    python sensitivity_convergence/convergence_analysis.py --mode mesh --stress-metric p95 --reference-n 60 --output-dir "D:\Desktop\RBDO1\subsea_deploy_optimization\subsea_edeploy_optimization\bayesian_optimization\multi_optimization\sensitivity_convergence\results\paper_convergence_validation\ABC_95_D"
-    python .\sensitivity_convergence\convergence_analysis.py --mode mesh --stress-metric p95 --smooth-stress --reference-n 80 --output-dir ".\sensitivity_convergence\results\paper_convergence_validation\ABC_p95_smooth_Nref80"
-    python .\sensitivity_convergence\convergence_analysis.py --mode mesh --stress-metric max --smooth-stress --reference-n 80 --output-dir ".\sensitivity_convergence\results\paper_convergence_validation\ABC_max_difD_smooth_Nref80"
-    python sensitivity_convergence/convergence_analysis.py --mode mesh --stress-metric max
+运行示例（在项目根目录执行）：
 
-常用检查命令：
-    python -m py_compile sensitivity_convergence/convergence_analysis.py
-        只检查 Python 语法和导入前编译，不运行仿真；适合修改代码后快速确认没有语法错误。
+    # 语法检查（不运行仿真）
+    python -m py_compile scripts/convergence_analysis.py
 
-    python sensitivity_convergence/convergence_analysis.py --mode catenary
-        只运行静态验证部分，生成无流悬链线/有流准静态参考解与数值稳态结果的对比图表。
+    # 仅运行静态悬链线验证（快速）
+    python scripts/convergence_analysis.py --mode catenary
+
+    # 快速烟测模式（少量网格点）
+    python scripts/convergence_analysis.py --mode mesh --quick
+
+    # 完整网格收敛性分析（p95 应力指标，默认）
+    python scripts/convergence_analysis.py --mode mesh
+
+    # 使用原始最大应力指标
+    python scripts/convergence_analysis.py --mode mesh --stress-metric max
+
+    # 平滑应力 + 自定义参考段数
+    python scripts/convergence_analysis.py --mode mesh --stress-metric p95 --smooth-stress --reference-n 80
+
+    # 全部运行（mesh + catenary）
+    python scripts/convergence_analysis.py --mode all
+
+    # 自定义输出目录
+    python scripts/convergence_analysis.py --mode mesh --output-dir results/convergence
+
+可用参数：
+    --mode          执行模式：all | mesh | catenary（默认 all）
+    --quick         快速烟测模式（少量网格点，短松弛时长）
+    --stress-metric 应力指标：p95（默认）| max
+    --smooth-stress 使用平滑应力历史
+    --reference-n   参考网格段数 N_ref（默认 40）
+    --error-threshold  收敛误差阈值（默认 0.05）
+    --relax-time    静态松弛仿真时长/s（默认 900）
+    --n-eval        静态采样点数（默认 280）
+    --dt-output     动态输出步长/s（默认 1.0）
+    --output-dir    输出目录
 """
 
 from __future__ import annotations
