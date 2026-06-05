@@ -4,6 +4,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D  # noqa: F401
 
+import sys
+
+_PROJECT_ROOT = Path(__file__).resolve().parents[2]
+_SRC_ROOT = _PROJECT_ROOT / "src"
+if str(_SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(_SRC_ROOT))
+
 from subsea_deployment_simulation.plotting_style import apply_times_new_roman_style
 
 
