@@ -3,12 +3,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# Output and results directory
-results/
-*.csv
-*.xlsx
-*.npz
-
 # C extensions
 *.so
 
@@ -44,7 +38,24 @@ ENV/
 env.bak/
 venv.bak/
 
-# VS Code / IDEs
+# IDE
 .vscode/
 .idea/
 *.swp
+
+# Generated data and figures
+*.npz
+*.xlsx
+*.svg
+*.png
+*.jpg
+*.jpeg
+*.pdf
+
+# Results directory (keep .gitkeep only)
+results/**
+!results/
+!results/.gitkeep
+
+# External source directory (not part of this repo)
+SCI_paper/

@@ -41,12 +41,13 @@ import pandas as pd
 from scipy.interpolate import interp1d
 from scipy.optimize import fsolve
 
-# 保证直接以脚本路径运行时也能解析项目根目录模块导入。
+# Ensure the package is importable even without `pip install -e .`
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+SRC_ROOT = PROJECT_ROOT / "src"
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
 
-def setup_publication_style():
+def setup_publication_style(show_message: bool = True):
     import matplotlib.pyplot as plt
     plt.rcParams.update({
         'font.size': 12,
@@ -57,7 +58,8 @@ def setup_publication_style():
         'legend.fontsize': 12,
         'figure.titlesize': 16
     })
-from high_fidelity_sim import (
+
+from subsea_deployment_simulation.high_fidelity_sim import (
     DEFAULT_CONFIG as HIGH_FIDELITY_DEFAULT_CONFIG,
     DynamicWireRopeSystem3D,
     WireRopeSystem3D,

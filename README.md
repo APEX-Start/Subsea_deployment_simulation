@@ -1,99 +1,154 @@
-# Subsea Deployment Simulation / 水下放物系统仿真工程
+# Subsea Deployment Simulation
 
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+High-fidelity simulation and analysis tools for 3D subsea wire-rope deployment dynamics.
 
 **[English](#english) | [中文](#chinese)**
 
+---
+
 <a id="english"></a>
+
 ## English
 
 ### Overview
-This repository contains a high-fidelity engineering simulation program for subsea wire rope deployment (lowering) systems, along with scripts for parameter sensitivity and convergence analyses. It primarily models a 3D subsea payload deployment scenario considering comprehensive environmental and physical factors such as vessel heave compensation, wave excitation, subsea currents, and wire rope dynamics.
 
-### Key Features
-- **High-Fidelity Simulation (`high_fidelity_sim.py`)**: Subsea lowering dynamics modeled via `scipy.integrate.solve_ivp`. It encompasses:
-  - Six degrees of freedom (6-DOF) vessel motion and wave response.
-  - Active Tension Control (ATC) algorithms.
-  - Subsea current modeling and dynamic responses of the payload and wire rope.
-- **Sensitivity Analysis (`sensitivity_analysis.py`)**: Uses Latin Hypercube Sampling (LHS) and polynomial fitting to analyze the impact of various physical parameters (e.g., stiffness, payload mass, wave conditions) on peak tension.
-- **Convergence Analysis (`convergence_analysis.py`)**: Evaluates the computational convergence of the ODE solver and the physical reliability of the results under various step sizes and mesh configurations.
-- **Ocean Current Analysis (`sea_current.ipynb`)**: Jupyter notebook for interactive visualization and analysis of sea current profiles.
+This repository provides a physics-based simulation framework for subsea payload deployment (lowering) systems. It models the complete deployment dynamics including:
+
+- **6-DOF vessel motion** with wave response (RAO)
+- **Active Tension Control (ATC)** for extreme load suppression
+- **Wire rope dynamics** — catenary shape, axial elasticity, hydrodynamic drag
+- **Ocean current profiles** — exponential decay model (South China Sea parameters)
+- **Payload hydrodynamics** — added mass, drag, and buoyancy effects
+
+The simulation engine uses `scipy.integrate.solve_ivp` to solve the coupled nonlinear ODE system.
+
+### Project Structure
+
+```
+Subsea_deployment_simulation/
+├── README.md
+├── LICENSE
+├── pyproject.toml
+├── requirements.txt
+├── .gitignore
+├── src/
+│   └── subsea_deployment_simulation/
+│       ├── __init__.py
+│       ├── high_fidelity_sim.py      # Core simulation model
+│       └── plotting_style.py          # Publication-style plotting helpers
+├── scripts/
+│   ├── convergence_analysis.py        # Mesh/solver convergence study
+│   ├── sensitivity_analysis.py        # LHS-based parameter sensitivity
+│   └── visualization/                 # Paper figure generators (plot_01 … plot_12)
+├── notebooks/
+│   └── sea_current.ipynb              # Interactive ocean current exploration
+├── data/                              # Small example data (if any)
+├── results/                           # Generated outputs (not tracked)
+│   ├── visualization/                 # Simulation payloads (npz)
+│   └── figures/                       # Generated SVG figures
+├── docs/
+│   ├── usage.md
+│   ├── visualization.md
+│   └── reproduction.md
+└── tests/
+    └── test_imports.py
+```
 
 ### Installation
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/APEX-Start/Subsea_deployment_simulation.git
-   cd Subsea_deployment_simulation
-   ```
-
-2. Install dependency packages:
-   ```bash
-   pip install -r requirements.txt
-   ```
+```bash
+git clone https://github.com/APEX-Start/Subsea_deployment_simulation.git
+cd Subsea_deployment_simulation
+python -m venv .venv
+# Windows:
+.\.venv\Scripts\activate
+# Linux/macOS:
+# source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -e .
+```
 
 ### Quick Start
-- Run a single high-fidelity simulation and visualize the summary results:
-  ```bash
-  python high_fidelity_sim.py
-  ```
-- Run the parameter sensitivity analysis (requires `high_fidelity_sim.py` configuration):
-  ```bash
-  python sensitivity_analysis.py
-  ```
-- Interact with the ocean current dataset or models:
-  ```bash
-  jupyter notebook sea_current.ipynb
-  ```
+
+**Run the main simulation:**
+
+```bash
+python -m subsea_deployment_simulation.high_fidelity_sim
+```
+
+**Run convergence analysis:**
+
+```bash
+python scripts/convergence_analysis.py --mode catenary
+python scripts/convergence_analysis.py --mode mesh --quick
+```
+
+**Run sensitivity analysis:**
+
+```bash
+python scripts/sensitivity_analysis.py --quick
+python scripts/sensitivity_analysis.py --samples 50
+```
+
+**Generate paper figures** (requires simulation output first):
+
+```bash
+python scripts/visualization/plot_01_upper_boundary_heave_disturbance.py
+python scripts/visualization/plot_11_operational_window.py
+```
+
+### Configuration
+
+All default simulation parameters are in `src/subsea_deployment_simulation/high_fidelity_sim.py` as the `DEFAULT_CONFIG` dictionary. Key parameters include:
+
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| `N` | 2 | Number of wire rope segments |
+| `L` | 100 m | Wire rope length |
+| `d` | 0.032 m | Wire rope diameter |
+| `m_b` | 500 kg | Payload mass |
+| `total_water_depth` | 1500 m | Water depth |
+| `release_speed` | 0.6 m/s | Lowering speed |
 
 ---
 
 <a id="chinese"></a>
-## 中文 / Chinese
+
+## 中文
 
 ### 项目简介
-本项目包含一个三维钢丝绳水下放物（吊放）系统的高保真工程仿真程序，以及配套的参数敏感性分析和网格/步长收敛性分析代码。项目主要用于求解和分析深水或海洋工程情况下的装备下放动力学问题，涵盖了母船补偿、波浪激励、海流扰动及管线/钢丝绳动态响应。
 
-### 核心功能与文件结构
-- **`high_fidelity_sim.py` (主仿真模块)**: 
-  使用 `solve_ivp` 进行非线性常微分方程组求解，集成了以下特性：
-  - 具备母船六自由度（6-DOF）运动模型与波浪响应（RAO）。
-  - 支持主动张力控制（ATC），有效抑制极值载荷。
-  - 考虑波浪流体力、复杂海流剖面以及钢丝绳与负载在水流中的非线性阻力。
-- **`sensitivity_analysis.py` (敏感性分析)**:
-  利用拉丁超立方抽样 (LHS) 在多元空间进行样本生成，通过评估大量工况分析输入参数（刚度系数、负载、波要素等）对结果（如最大缆绳张力）的敏感性响应。
-- **`convergence_analysis.py` (收敛性分析)**:
-  测试不同离散段数、求解器相对/绝对容差下收敛性，并出具对比分析结果。
-- **`sea_current.ipynb`**:
-  用于海流流场探索与数据分析的 Jupyter Notebook 交互文件。
+本项目是一个三维钢丝绳水下放物（吊放）系统的高保真仿真框架，涵盖母船六自由度运动、主动张力控制（ATC）、钢丝绳动力学、海流扰动和载荷水动力等完整物理过程。核心求解器基于 `scipy.integrate.solve_ivp`。
 
-### 安装依赖
+### 核心功能
 
-1. 获取代码:
-   ```bash
-   git clone https://github.com/APEX-Start/Subsea_deployment_simulation.git
-   cd Subsea_deployment_simulation
-   ```
+- **`high_fidelity_sim.py`** — 主仿真模块，集成母船运动、波浪激励、钢丝绳非线性动力学
+- **`convergence_analysis.py`** — 网格/步长收敛性验证与静态悬链线对比
+- **`sensitivity_analysis.py`** — 拉丁超立方采样（LHS）参数敏感性分析
+- **`scripts/visualization/`** — 论文图表生成脚本（12 张图）
+- **`sea_current.ipynb`** — 海流流速剖面交互分析
 
-2. 安装所需 Python 运行库:
-   ```bash
-   pip install -r requirements.txt
-   ```
+### 安装与使用
 
-### 快速使用
-- **直接运行完整下放仿真**，查看控制台输出及自动生成的结果图表：
-  ```bash
-  python high_fidelity_sim.py
-  ```
-- **执行敏感性分析批处理**：
-  ```bash
-  python sensitivity_analysis.py
-  ```
-- **查看海流环境探索**：
-  ```bash
-  jupyter notebook sea_current.ipynb
-  ```
+```bash
+git clone https://github.com/APEX-Start/Subsea_deployment_simulation.git
+cd Subsea_deployment_simulation
+python -m venv .venv
+.\.venv\Scripts\activate
+python -m pip install -e .
+```
 
-### 注释及开发说明
-主逻辑代码 `high_fidelity_sim.py` 内含详细的中文工程参数释义。如需修改放缆深度、水文环境或仿真时长，可以直接调整该文件顶部的 `DEFAULT_CONFIG` 字典。
+运行主仿真：
+
+```bash
+python -m subsea_deployment_simulation.high_fidelity_sim
+```
+
+参数修改请编辑 `src/subsea_deployment_simulation/high_fidelity_sim.py` 顶部的 `DEFAULT_CONFIG` 字典。
+
+### 注释说明
+
+主仿真代码内含详细中文工程参数释义。更多使用说明请参阅 `docs/` 目录。

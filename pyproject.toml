@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "subsea-deployment-simulation"
+version = "0.1.0"
+description = "High-fidelity simulation and analysis tools for subsea deployment dynamics."
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+dependencies = [
+    "numpy>=1.20.0",
+    "scipy>=1.7.0",
+    "pandas>=1.3.0",
+    "matplotlib>=3.4.0",
+    "seaborn>=0.11.0",
+    "scikit-learn>=1.0.0",
+    "openpyxl>=3.0.0",
+    "jupyter>=1.0.0",
+    "notebook>=6.4.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]

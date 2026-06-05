@@ -28,15 +28,17 @@ from typing import Dict, List, Tuple, Optional
 
 MODULE_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = MODULE_DIR.parent
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+SRC_ROOT = PROJECT_ROOT / "src"
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
 
 # 导入高保真仿真模块
-from high_fidelity_sim import (
+from subsea_deployment_simulation.high_fidelity_sim import (
     DEFAULT_CONFIG as HIGH_FIDELITY_DEFAULT_CONFIG,
     DynamicWireRopeSystem3D,
 )
-def setup_publication_style():
+
+def setup_publication_style(show_message: bool = True):
     import matplotlib.pyplot as plt
     plt.rcParams.update({
         'font.size': 12,
