@@ -46,7 +46,17 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from high_fidelity_1_opt import setup_publication_style
+def setup_publication_style():
+    import matplotlib.pyplot as plt
+    plt.rcParams.update({
+        'font.size': 12,
+        'axes.labelsize': 14,
+        'axes.titlesize': 14,
+        'xtick.labelsize': 12,
+        'ytick.labelsize': 12,
+        'legend.fontsize': 12,
+        'figure.titlesize': 16
+    })
 from high_fidelity_sim import (
     DEFAULT_CONFIG as HIGH_FIDELITY_DEFAULT_CONFIG,
     DynamicWireRopeSystem3D,

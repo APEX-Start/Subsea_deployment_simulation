@@ -8,7 +8,7 @@
 - 标准化回归系数（SRC）和秩相关系数（SRRC）计算
 - 结果可直接作为后续 Kriging 代理模型的初始训练集
 & C:\\Users\\syc\\anaconda3\\envs\\deploy\\python.exe sensitivity_convergence\\sensitivity_analysis.py --fig20-only
-作者：自动生成
+作者：Yuecheng Shen
 日期：2025-12-11
 """
 
@@ -36,7 +36,17 @@ from high_fidelity_sim import (
     DEFAULT_CONFIG as HIGH_FIDELITY_DEFAULT_CONFIG,
     DynamicWireRopeSystem3D,
 )
-from high_fidelity_1_opt import setup_publication_style
+def setup_publication_style():
+    import matplotlib.pyplot as plt
+    plt.rcParams.update({
+        'font.size': 12,
+        'axes.labelsize': 14,
+        'axes.titlesize': 14,
+        'xtick.labelsize': 12,
+        'ytick.labelsize': 12,
+        'legend.fontsize': 12,
+        'figure.titlesize': 16
+    })
 
 DEFAULT_OUTPUT_ROOT = MODULE_DIR / 'results' / 'sensitivity_analysis'
 
