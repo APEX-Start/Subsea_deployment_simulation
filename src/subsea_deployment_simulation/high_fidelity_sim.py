@@ -3205,7 +3205,7 @@ class DynamicWireRopeSystem3D(WireRopeSystem3D):
         filtered_mean_stress = self._engineering_filter_series(times, raw_mean_stress)
 
         if output_path is None:
-            output_path = os.path.join(os.getcwd(), 'SCI_paper', 'visualization_payload.npz')
+            output_path = os.path.join(os.getcwd(), 'results', 'visualization', 'visualization_payload.npz')
 
         output_dir = os.path.dirname(output_path)
         if output_dir:
@@ -3278,7 +3278,7 @@ def run_dynamic_3d_simulation():
 
     print("\n三维连续动态下放系统初始化（带PCH细化和25m停止）...")
     system = DynamicWireRopeSystem3D(config)
-    output_dir = os.path.join(os.getcwd(), 'SCI_paper')
+    output_dir = os.path.join(os.getcwd(), 'results', 'visualization')
     os.makedirs(output_dir, exist_ok=True)
 
     # 计算总时间（足够长，但会在25m处自动停止）
@@ -3304,7 +3304,7 @@ def run_dynamic_3d_simulation():
     system.compute_engineering_metrics()
 
     print("\n[完成] 三维连续动态下放模拟完成！")
-    print("\n提示：图像已拆分为 SCI_paper 目录下独立脚本，请仿真后分别运行。")
+    print("\n提示：图像已拆分为 scripts/visualization/ 目录下独立脚本，请仿真后分别运行。")
 
     return system, sol, summary
 

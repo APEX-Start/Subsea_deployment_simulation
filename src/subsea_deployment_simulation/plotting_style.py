@@ -1,4 +1,4 @@
-"""Common plotting style helpers for SCI_paper scripts."""
+"""Common plotting style helpers for publication-ready figures."""
 
 from __future__ import annotations
 
